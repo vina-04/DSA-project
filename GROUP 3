@@ -66,7 +66,7 @@ public:
         }
     }
 
-    //Perform sequential search to find a receipt by receipt number
+    //Sequential search to find a receipt by receipt number
     void sequentialSearch(int targetReceiptNo) {
         Receipt* current = head;
         while (current) {
@@ -80,14 +80,15 @@ public:
         cout << "Receipt not found with number " << targetReceiptNo << " (Sequential Search).\n";
     }    //End sequential search
 
+    //Binary search to find a receipt by receipt number
     void binarySearch(int targetReceiptNo) {
-        // Convert linked list to vector for binary search
+        //Convert linked list to vector for binary search
         vector<Receipt*> receiptArray;
         Receipt* current = head;
         while (current) {
             receiptArray.push_back(current);
             current = current->next;
-        }
+        }    //End while loop
 
         // Sort by receipt number
         sort(receiptArray.begin(), receiptArray.end(), [](Receipt* a, Receipt* b) {
