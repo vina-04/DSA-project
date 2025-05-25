@@ -5,6 +5,7 @@
 #include <algorithm>
 using namespace std;
 
+//Structure to hold information about each item in a receipt
 struct Item {
     string name;
     double price;
