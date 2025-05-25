@@ -66,12 +66,12 @@ public:
         }
     }
 
-    //Perform linear search to find a receipt by receipt number
-    void linearSearch(int targetReceiptNo) {
+    //Perform sequential search to find a receipt by receipt number
+    void sequentialSearch(int targetReceiptNo) {
         Receipt* current = head;
         while (current) {
             if (current->receiptNo == targetReceiptNo) {
-                cout << "[Linear Search] Receipt found:\n";
+                cout << "[Sequential Search] Receipt found:\n";
                 displayReceipt(current);
                 return;
             }
