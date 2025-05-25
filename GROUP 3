@@ -77,7 +77,7 @@ public:
             }
             current = current->next;
         }
-        cout << "Receipt not found with number " << targetReceiptNo << " (Linear Search).\n";
+        cout << "Receipt not found with number " << targetReceiptNo << " (Sequential Search).\n";
     }
 
     void binarySearch(int targetReceiptNo) {
