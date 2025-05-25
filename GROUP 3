@@ -66,6 +66,7 @@ public:
         }
     }
 
+    //Perform linear search to find a receipt by receipt number
     void linearSearch(int targetReceiptNo) {
         Receipt* current = head;
         while (current) {
