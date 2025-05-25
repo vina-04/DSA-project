@@ -39,6 +39,7 @@ public:
         head = newReceipt;    //New receipt becomes the new head
     }
 
+     //Function to display a single receipt in a formatted table
     void displayReceipt(const Receipt* r) {
         if (!r) return;
         cout << "Receipt No: " << r->receiptNo << "\nDate: " << r->date << endl;
