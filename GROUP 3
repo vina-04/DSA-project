@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <string>
 #include <vector>
+#include <stack>
 #include <algorithm>
 using namespace std;
 
@@ -181,5 +182,110 @@ int main() {
         }
     } while (choice != 0);
 
+// Manage a New Sale Order 
+// This function uses a stack to temporarily store an order before confirmation
+void manageCurrentOrder(ReceiptList& receiptList) {
+    stack<Item> orderStack; // Temporary container for current order
+    int choice;
+
+    do {
+        cout << "\n-- Current Sale Order Menu --\n";
+        cout << "1. Add Item\n";
+        cout << "2. Edit Last Item\n";
+        cout << "3. Delete Last Item\n";
+        cout << "4. View Current Order\n";
+        cout << "5. Confirm Order\n";
+        cout << "0. Cancel Order\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            Item item;
+            cout << "Enter item name: ";
+            cin.ignore();
+            getline(cin, item.name);
+            cout << "Enter price (RM): ";
+            cin >> item.price;
+            cout << "Enter quantity: ";
+            cin >> item.quantity;
+            orderStack.push(item); // Add to stack
+        }
+        else if (choice == 2) {
+            if (orderStack.empty()) {
+                cout << "No item to edit.\n";
+                continue;
+            }
+            Item topItem = orderStack.top(); // Get top item
+            orderStack.pop(); // Remove it to allow editing
+            cout << "Editing item: " << topItem.name << "\n";
+            cout << "Enter new name: ";
+            cin.ignore();
+            getline(cin, topItem.name);
+            cout << "Enter new price (RM): ";
+            cin >> topItem.price;
+            cout << "Enter new quantity: ";
+            cin >> topItem.quantity;
+            orderStack.push(topItem); // Push back the updated item
+        }
+        else if (choice == 3) {
+            if (!orderStack.empty()) {
+                cout << "Deleted item: " << orderStack.top().name << "\n";
+                orderStack.pop();
+            } else {
+                cout << " Stack is already empty.\n";
+            }
+        }
+        else if (choice == 4) {
+            if (orderStack.empty()) {
+                cout << " Order is currently empty.\n";
+                continue;
+            }
+
+            stack<Item> temp = orderStack;
+            vector<Item> displayItems;
+
+            // Reverse order for proper display
+            while (!temp.empty()) {
+                displayItems.push_back(temp.top());
+                temp.pop();
+            }
+            reverse(displayItems.begin(), displayItems.end());
+
+            cout << "\n--- Current Order ---\n";
+            cout << left << setw(5) << "No" << setw(25) << "Item Name"
+                 << setw(10) << "Price" << setw(10) << "Qty" << "Total\n";
+            double grandTotal = 0;
+            for (size_t i = 0; i < displayItems.size(); ++i) {
+                Item item = displayItems[i];
+                double total = item.total();
+                cout << left << setw(5) << (i + 1) << setw(25) << item.name
+                     << setw(10) << item.price << setw(10) << item.quantity << total << endl;
+                grandTotal += total;
+            }
+            cout << "TOTAL: RM " << grandTotal << "\n";
+        }
+        else if (choice == 5) {
+            if (orderStack.empty()) {
+                cout << "Cannot confirm an empty order.\n";
+                continue;
+            }
+
+            vector<Item> confirmedItems;
+            while (!orderStack.empty()) {
+                confirmedItems.push_back(orderStack.top());
+                orderStack.pop();
+            }
+            reverse(confirmedItems.begin(), confirmedItems.end());
+
+            string date;
+            cout << "Enter date (e.g., 29/4/2024): ";
+            cin.ignore();
+            getline(cin, date);
+            receiptList.addReceipt(confirmedItems, date);
+            break;
+        }
+
+    } while (choice != 0);
+}
     return 0;
 }
