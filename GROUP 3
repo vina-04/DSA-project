@@ -17,6 +17,7 @@ struct Item {
     }
 };
 
+//Structure to represent a receipt
 struct Receipt {
     int receiptNo;
     string date;
