@@ -78,7 +78,7 @@ public:
             current = current->next;
         }
         cout << "Receipt not found with number " << targetReceiptNo << " (Sequential Search).\n";
-    }
+    }    //End sequential search
 
     void binarySearch(int targetReceiptNo) {
         // Convert linked list to vector for binary search
