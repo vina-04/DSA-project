@@ -11,6 +11,7 @@ struct Item {
     double price;
     int quantity;
 
+    //Calculate total price for this item
     double total() const {
         return price * quantity;
     }
