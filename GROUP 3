@@ -57,6 +57,7 @@ public:
         cout << "TOTAL: RM " << grandTotal << "\n\n";
     }
 
+    //Function to display all receipts in the system
     void viewAllReceipts() {
         Receipt* current = head;
         while (current) {
