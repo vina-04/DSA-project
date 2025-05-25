@@ -62,7 +62,7 @@ public:
         Receipt* current = head;
         while (current) {
             displayReceipt(current);
-            current = current->next;
+            current = current->next;    //Move to the next receipt
         }
     }
 
