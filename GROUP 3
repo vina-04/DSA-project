@@ -25,13 +25,15 @@ struct Receipt {
     Receipt* next;    //Pointer to the next receipt
 };
 
+//Class to manage the linked list of receipts
 class ReceiptList {
 private:
-    Receipt* head;
+    Receipt* head;     //Pointer to the first receipt in the list
 
 public:
     ReceiptList() : head(nullptr) {}
 
+    //Function to add a new receipt to the front of the linked list
     void addReceipt(int receiptNo, const string& date, const vector<Item>& items) {
         Receipt* newReceipt = new Receipt{ receiptNo, date, items, head };
         head = newReceipt;
