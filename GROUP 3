@@ -22,7 +22,7 @@ struct Receipt {
     int receiptNo;
     string date;
     vector<Item> items;    //List of items purchased in this receipt
-    Receipt* next;
+    Receipt* next;    //Pointer to the next receipt
 };
 
 class ReceiptList {
