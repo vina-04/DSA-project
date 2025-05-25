@@ -21,7 +21,7 @@ struct Item {
 struct Receipt {
     int receiptNo;
     string date;
-    vector<Item> items;
+    vector<Item> items;    //List of items purchased in this receipt
     Receipt* next;
 };
 
