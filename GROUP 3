@@ -51,7 +51,7 @@ public:
             double total = item.total();
             cout << left << setw(5) << (i + 1) << setw(25) << item.name << setw(10) << item.price
                  << setw(10) << item.quantity << total << endl;
-            grandTotal += total;
+            grandTotal += total;    //Accumulate grand total
         }
         cout << "--------------------------------------------\n";
         cout << "TOTAL: RM " << grandTotal << "\n\n";
