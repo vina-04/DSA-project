@@ -90,12 +90,12 @@ public:
             current = current->next;
         }    //End while loop
 
-        // Sort by receipt number
+        //Sort by receipt number
         sort(receiptArray.begin(), receiptArray.end(), [](Receipt* a, Receipt* b) {
             return a->receiptNo < b->receiptNo;
         });
 
-        // Binary search
+        //Binary search on sorted vector
         int low = 0, high = receiptArray.size() - 1;
         while (low <= high) {
             int mid = (low + high) / 2;
@@ -109,9 +109,11 @@ public:
                 high = mid - 1;
             }
         }
+        //If not found
         cout << "Receipt not found with number " << targetReceiptNo << " (Binary Search).\n";
     }
 
+    //Destructor to clean up memory used by linked list
     ~ReceiptList() {
         while (head) {
             Receipt* temp = head;
@@ -121,7 +123,7 @@ public:
     }
 };
 
-// Sample Data Setup
+//Function to add pre-set receipt data for testing
 void createSampleReceipts(ReceiptList& list) {
     list.addReceipt(101, "29/4/2024", {
         {"C++ for Beginner", 138.0, 1},
@@ -142,7 +144,7 @@ void createSampleReceipts(ReceiptList& list) {
     });
 }
 
-// Menu Interface for Testing
+//Main Menu Interface for Testing
 int main() {
     ReceiptList list;
     createSampleReceipts(list);
