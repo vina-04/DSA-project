@@ -164,9 +164,9 @@ int main() {
             list.viewAllReceipts();
             break;
         case 2:
-            cout << "Enter Receipt No to search (Linear): ";
+            cout << "Enter Receipt No to search (Sequential): ";
             cin >> receiptNo;
-            list.linearSearch(receiptNo);
+            list.sequentialSearch(receiptNo);
             break;
         case 3:
             cout << "Enter Receipt No to search (Binary): ";
