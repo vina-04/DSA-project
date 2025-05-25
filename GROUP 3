@@ -1,1 +1,174 @@
 #include<iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct Item {
+    string name;
+    double price;
+    int quantity;
+
+    double total() const {
+        return price * quantity;
+    }
+};
+
+struct Receipt {
+    int receiptNo;
+    string date;
+    vector<Item> items;
+    Receipt* next;
+};
+
+class ReceiptList {
+private:
+    Receipt* head;
+
+public:
+    ReceiptList() : head(nullptr) {}
+
+    void addReceipt(int receiptNo, const string& date, const vector<Item>& items) {
+        Receipt* newReceipt = new Receipt{ receiptNo, date, items, head };
+        head = newReceipt;
+    }
+
+    void displayReceipt(const Receipt* r) {
+        if (!r) return;
+        cout << "Receipt No: " << r->receiptNo << "\nDate: " << r->date << endl;
+        cout << "--------------------------------------------\n";
+        cout << left << setw(5) << "No" << setw(25) << "Item Name" << setw(10) << "Price" << setw(10) << "Qty" << "Total\n";
+        double grandTotal = 0;
+        for (size_t i = 0; i < r->items.size(); ++i) {
+            const Item& item = r->items[i];
+            double total = item.total();
+            cout << left << setw(5) << (i + 1) << setw(25) << item.name << setw(10) << item.price
+                 << setw(10) << item.quantity << total << endl;
+            grandTotal += total;
+        }
+        cout << "--------------------------------------------\n";
+        cout << "TOTAL: RM " << grandTotal << "\n\n";
+    }
+
+    void viewAllReceipts() {
+        Receipt* current = head;
+        while (current) {
+            displayReceipt(current);
+            current = current->next;
+        }
+    }
+
+    void linearSearch(int targetReceiptNo) {
+        Receipt* current = head;
+        while (current) {
+            if (current->receiptNo == targetReceiptNo) {
+                cout << "[Linear Search] Receipt found:\n";
+                displayReceipt(current);
+                return;
+            }
+            current = current->next;
+        }
+        cout << "Receipt not found with number " << targetReceiptNo << " (Linear Search).\n";
+    }
+
+    void binarySearch(int targetReceiptNo) {
+        // Convert linked list to vector for binary search
+        vector<Receipt*> receiptArray;
+        Receipt* current = head;
+        while (current) {
+            receiptArray.push_back(current);
+            current = current->next;
+        }
+
+        // Sort by receipt number
+        sort(receiptArray.begin(), receiptArray.end(), [](Receipt* a, Receipt* b) {
+            return a->receiptNo < b->receiptNo;
+        });
+
+        // Binary search
+        int low = 0, high = receiptArray.size() - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (receiptArray[mid]->receiptNo == targetReceiptNo) {
+                cout << "[Binary Search] Receipt found:\n";
+                displayReceipt(receiptArray[mid]);
+                return;
+            } else if (receiptArray[mid]->receiptNo < targetReceiptNo) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        cout << "Receipt not found with number " << targetReceiptNo << " (Binary Search).\n";
+    }
+
+    ~ReceiptList() {
+        while (head) {
+            Receipt* temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+};
+
+// Sample Data Setup
+void createSampleReceipts(ReceiptList& list) {
+    list.addReceipt(101, "29/4/2024", {
+        {"C++ for Beginner", 138.0, 1},
+        {"Let's Cook", 20.0, 2}
+    });
+    list.addReceipt(102, "29/4/2024", {
+        {"Data Structures", 75.0, 3},
+        {"Python Basics", 60.0, 1}
+    });
+    list.addReceipt(103, "29/4/2024", {
+        {"Cooking 101", 25.0, 2}
+    });
+    list.addReceipt(104, "29/4/2024", {
+        {"Java for All", 95.0, 1}
+    });
+    list.addReceipt(105, "29/4/2024", {
+        {"Algorithms Deep Dive", 88.0, 1}
+    });
+}
+
+// Menu Interface for Testing
+int main() {
+    ReceiptList list;
+    createSampleReceipts(list);
+
+    int choice, receiptNo;
+    do {
+        cout << "\n--- View Order Detail Menu ---\n";
+        cout << "1. View All Receipts\n";
+        cout << "2. Search by Receipt No (Linear Search)\n";
+        cout << "3. Search by Receipt No (Binary Search)\n";
+        cout << "0. Exit\n";
+        cout << "Choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            list.viewAllReceipts();
+            break;
+        case 2:
+            cout << "Enter Receipt No to search (Linear): ";
+            cin >> receiptNo;
+            list.linearSearch(receiptNo);
+            break;
+        case 3:
+            cout << "Enter Receipt No to search (Binary): ";
+            cin >> receiptNo;
+            list.binarySearch(receiptNo);
+            break;
+        case 0:
+            cout << "Exiting...\n";
+            break;
+        default:
+            cout << "Invalid choice.\n";
+        }
+    } while (choice != 0);
+
+    return 0;
+}
