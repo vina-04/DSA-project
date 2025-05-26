@@ -81,8 +81,8 @@ public:
 		}
 	
 		return newReceipt.receiptNo;
-	}
-	
+	}	
+
      //Function to display a single receipt in a formatted table
     void displayReceipt(const Receipt* r) {
         if (!r) return;
@@ -166,66 +166,6 @@ public:
         }
     }
 };
-
-//Function to add pre-set receipt data for testing
-void createSampleReceipts(ReceiptList& list) {
-   list.addReceipt(101, "29/4/2024", {
-      {"C++ for Beginner", 138.0, 1},
-     {"Let's Cook", 20.0, 2}
-    });
-    list.addReceipt(102, "29/4/2024", {
-        {"Data Structures", 75.0, 3},
-        {"Python Basics", 60.0, 1}
-    });
-    list.addReceipt(103, "29/4/2024", {
-        {"Cooking 101", 25.0, 2}
-    });
-    list.addReceipt(104, "29/4/2024", {
-        {"Java for All", 95.0, 1}
-    });
-    list.addReceipt(105, "29/4/2024", {
-        {"Algorithms Deep Dive", 88.0, 1}
-    });
-}
-
-//Main Menu Interface for Testing
-int main() {
-    ReceiptList list;
-    createSampleReceipts(list);
-
-    int choice, receiptNo;
-    do {
-        cout << "\n--- View Order Detail Menu ---\n";
-        cout << "1. View All Receipts\n";
-        cout << "2. Search by Receipt No (Linear Search)\n";
-        cout << "3. Search by Receipt No (Binary Search)\n";
-        cout << "0. Exit\n";
-        cout << "Choice: ";
-        cin >> choice;
-
-        switch (choice) {
-        case 1:
-            list.viewAllReceipts();
-            break;
-        case 2:
-            cout << "Enter Receipt No to search (Sequential): ";
-            cin >> receiptNo;
-            list.sequentialSearch(receiptNo);
-            break;
-        case 3:
-            cout << "Enter Receipt No to search (Binary): ";
-            cin >> receiptNo;
-            list.binarySearch(receiptNo);
-            break;
-        case 0:
-            cout << "Exiting...\n";
-            break;
-        default:
-            cout << "Invalid choice.\n";
-        }
-    } while (choice != 0);
-}
-
 // Manage a New Sale Order 
 // This function uses a stack to temporarily store an order before confirmation
 void manageCurrentOrder(ReceiptList& receiptList) 
@@ -336,5 +276,98 @@ void manageCurrentOrder(ReceiptList& receiptList)
             break;
         }
 
+		} while (choice != 0);
+}
+
+//Function to add pre-set receipt data for testing
+void createSampleReceipts(ReceiptList& list) {
+    vector<Item> r1 = {
+        {"C++ for Beginner", 138.0, 1},
+        {"Let's Cook", 20.0, 2}
+    };
+    vector<Item> r2 = {
+        {"Data Structures", 75.0, 3},
+        {"Python Basics", 60.0, 1}
+    };
+    vector<Item> r3 = {
+        {"Cooking 101", 25.0, 2}
+    };
+    vector<Item> r4 = {
+        {"Java for All", 95.0, 1}
+    };
+    vector<Item> r5 = {
+        {"Algorithms Deep Dive", 88.0, 1}
+    };
+
+    list.addReceipt(r1, "29/4/2024");
+    list.addReceipt(r2, "29/4/2024");
+    list.addReceipt(r3, "29/4/2024");
+    list.addReceipt(r4, "29/4/2024");
+    list.addReceipt(r5, "29/4/2024");
+}
+
+//Main Menu Interface for Testing
+int main() {
+    ReceiptList list;
+    createSampleReceipts(list);
+
+    int choice, receiptNo,sub;
+    do {
+        cout << "\n--- Main Menu ---\n";
+        cout << "1. Add New Sale Order\n";
+        cout << "2. View Order Detail\n";
+        cout << "3. View Daily Sales Summary\n";
+        cout << "0. Exit\n";
+        cout << "Choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            manageCurrentOrder(list);
+            break;
+        case 2:
+        do {
+        	cout << "\n===== Twinkle Little Star Bookshop =====" << endl;
+        	cout << "1. View All Receipts" << endl;
+        	cout << "2. Search by Receipt No (Sequential)" << endl;
+        	cout << "3. Search by Receipt No (Binary)" << endl;
+        	cout << "0. Back to main menu" << endl;
+        	cout << "Enter your choice: ";
+        	cin >> sub;
+
+        	switch (sub) {
+            case 1:
+                list.viewAllReceipts();
+                break;
+            case 2: {
+                int rno;
+                cout << "Enter Receipt No to search (Sequential): ";
+                cin >> rno;
+                list.sequentialSearch(rno);
+                break;
+            }
+            case 3: {
+                int rno;
+                cout << "Enter Receipt No to search (Binary): ";
+                cin >> rno;
+                list.binarySearch(rno);
+                break;
+            }
+            case 0:
+                break;
+            default:
+                cout << "Invalid choice.\n";
+        }
+    } while (sub != 0);
+            break;
+        case 3:
+            break;
+        case 0:
+            cout << "Exiting...\n";
+            break;
+        default:
+            cout << "Invalid choice.\n";
+        }
     } while (choice != 0);
+    return 0;
 }
