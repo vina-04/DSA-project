@@ -281,6 +281,10 @@ void manageCurrentOrder(ReceiptList& receiptList)
 		} while (choice != 0);
 }
 
+int viewdailysalesummary(){
+
+}
+
 //Function to add pre-set receipt data for testing
 void createSampleReceipts(ReceiptList& list) {
     vector<Item> r1 = {
@@ -363,6 +367,7 @@ int main() {
     } while (sub != 0);
             break;
         case 3:
+	    list.viewdailysalesummary();
             break;
         case 0:
             cout << "Exiting...\n";
