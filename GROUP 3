@@ -53,8 +53,9 @@ public:
 		Receipt newReceipt;
 		newReceipt.receiptNo = nextReceiptNo++;
 		newReceipt.date = date;
-		newReceipt.grandTotal = 0;
-	
+		newReceipt.items = items; // Copy items to receipt
+ 		newReceipt.grandTotal = 0;
+		
 		//Copy items into the receipt's item list
 		for(const Item &item : items)
 		{
@@ -86,6 +87,7 @@ public:
      //Function to display a single receipt in a formatted table
     void displayReceipt(const Receipt* r) {
         if (!r) return;
+        cout << fixed << setprecision(2); //2 digits after the decimal point
         cout << "Receipt No: " << r->receiptNo << "\nDate: " << r->date << endl;
         cout << "--------------------------------------------\n";
         cout << left << setw(5) << "No" << setw(25) << "Item Name" << setw(10) << "Price" << setw(10) << "Qty" << "Total\n";
