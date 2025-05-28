@@ -18,12 +18,6 @@ struct Item {
     }
 };
 
-struct ItemNode// Pointer of Linked-list
-{
-	Item *data;
-	ItemNode *next;
-};
-
 //Structure to represent a receipt
 struct Receipt {
     int receiptNo;
@@ -41,80 +35,96 @@ struct ReceiptNode //Linked-list of receipts
 //Class to manage the linked list of receipts
 class ReceiptList {
 private:
-    ReceiptNode *head;     //Pointer to the first receipt in the list
+	struct ReceiptNode //Linked-list of receipts
+	{
+		Receipt data;
+		ReceiptNode *next;
+	};
+   	ReceiptNode *head;     //Pointer to the first receipt in the list
 	int nextReceiptNo;
 	
 public:
-    ReceiptList() : head(nullptr), nextReceiptNo(1) {}
+	ReceiptList() : head(nullptr), nextReceiptNo(1) {}
 
-	//Create receipt list
-    int addReceipt(vector<Item>& items, const string &date)
-	{
-		Receipt newReceipt;
-		newReceipt.receiptNo = nextReceiptNo++;
-		newReceipt.date = date;
-		newReceipt.items = items; // Copy items to receipt
- 		newReceipt.grandTotal = 0;
+	int addReceipt(const vector<Item>& items, const string &date);
+		void displayReceipt(const Receipt* r) const;
+		void viewAllReceipts() const;
+		void sequentialSearch(int targetReceiptNo) const;
+		void binarySearch(int targetReceiptNo) const; 
+		~ReceiptList();
+};
+
+void createSampleReceipts(ReceiptList& list);
+void manageCurrentOrder(ReceiptList& receiptList);
+
+//Create receipt list
+int Receipt::addReceipt(const vector<Item>& items, const string &date)
+{
+	Receipt newReceipt;
+	newReceipt.receiptNo = nextReceiptNo++;
+	newReceipt.date = date;
+	newReceipt.items = items; // Copy items to receipt
+ 	newReceipt.grandTotal = 0;
 		
-		//Copy items into the receipt's item list
-		for(const Item &item : items)
-		{
-			newReceipt.grandTotal += item.total();
-		}
+	//Copy items into the receipt's item list
+	for(const Item &item : items)
+	{
+		newReceipt.grandTotal += item.total();
+	}
 	
-		ReceiptNode *newReceiptNode = new ReceiptNode;
-		newReceiptNode ->data = newReceipt;
-		newReceiptNode ->next = nullptr;
+	ReceiptNode *newReceiptNode = new ReceiptNode;
+	newReceiptNode ->data = newReceipt;
+	newReceiptNode ->next = nullptr;
 	
-		//Add the new receipt to the list
-		if (!head)
+	//Add the new receipt to the list
+	if (!head)
+	{
+		head = newReceiptNode;
+	}
+	else
+	{
+		ReceiptNode *temp = head;
+		while (temp->next!=nullptr)
 		{
-			head = newReceiptNode;
+			temp = temp->next;
 		}
-		else
-		{
-			ReceiptNode *temp = head;
-			while (temp->next!=nullptr)
-			{
-				temp = temp->next;
-			}
-			temp->next = newReceiptNode;
-		}
+		temp->next = newReceiptNode;
+	}
 	
-		return newReceipt.receiptNo;
-	}	
+	return newReceipt.receiptNo;
+}	
 
-     //Function to display a single receipt in a formatted table
-    void displayReceipt(const Receipt* r) {
-        if (!r) return;
-        cout << fixed << setprecision(2); //2 digits after the decimal point
-        cout << "Receipt No: " << r->receiptNo << "\nDate: " << r->date << endl;
-        cout << "--------------------------------------------\n";
-        cout << left << setw(5) << "No" << setw(25) << "Item Name" << setw(10) << "Price" << setw(10) << "Qty" << "Total\n";
-        double grandTotal = 0;
-        for (size_t i = 0; i < r->items.size(); ++i) {
-            const Item& item = r->items[i];
-            double total = item.total();
-            cout << left << setw(5) << (i + 1) << setw(25) << item.name << setw(10) << item.price
-                 << setw(10) << item.quantity << total << endl;
-            grandTotal += total;    //Accumulate grand total
-        }
-        cout << "--------------------------------------------\n";
-        cout << "TOTAL: RM " << grandTotal << "\n\n";
-    }
+//Function to display a single receipt in a formatted table
+void ReceiptList::displayReceipt(const Receipt* r) const {
+if (!r) return;
+cout << fixed << setprecision(2); //2 digits after the decimal point
+cout << "Receipt No: " << r->receiptNo << "\nDate: " << r->date << endl;
+cout << "--------------------------------------------\n";
+cout << left << setw(5) << "No" << setw(25) << "Item Name" << setw(10) << "Price" << setw(10) << "Qty" << "Total\n";
+double grandTotal = 0;
+for (size_t i = 0; i < r->items.size(); ++i) {
+        const Item& item = r->items[i];
+        double total = item.total();
+        cout << left << setw(5) << (i + 1) << setw(25) << item.name << setw(10) << item.price
+                << setw(10) << item.quantity << total << endl;
+        grandTotal += total;    //Accumulate grand total
+}
+cout << "--------------------------------------------\n";
+cout << "TOTAL: RM " << grandTotal << "\n\n";
+}
 
-    //Function to display all receipts in the system
-    void viewAllReceipts() {
+//Function to display all receipts in the system
+void ReceiptList::viewAllReceipts() const {
         ReceiptNode *current = head;
         while (current) {
             displayReceipt(&current->data);
             current = current->next;    //Move to the next receipt
         }
-    }
+}
 
-    //Sequential search to find a receipt by receipt number
-    void sequentialSearch(int targetReceiptNo) {
-        ReceiptNode *current = head;
+//Sequential search to find a receipt by receipt number
+void ReceiptList::sequentialSearch(int targetReceiptNo) const {
+	ReceiptNode *current = head;
         while (current) {
             if (current->data.receiptNo == targetReceiptNo) {
                 cout << "[Sequential Search] Receipt found:\n";
@@ -124,10 +134,10 @@ public:
             current = current->next;
         }
         cout << "Receipt not found with number " << targetReceiptNo << " (Sequential Search).\n";
-    }    //End sequential search
+}    //End sequential search
 
-    //Binary search to find a receipt by receipt number
-    void binarySearch(int targetReceiptNo) {
+//Binary search to find a receipt by receipt number
+void ReceiptList::binarySearch(int targetReceiptNo) const {
         //Convert linked list to vector for binary search
         vector<Receipt*> receiptArray;
         ReceiptNode *current = head;
@@ -157,17 +167,17 @@ public:
         }
         //If not found
         cout << "Receipt not found with number " << targetReceiptNo << " (Binary Search).\n";
-    }
+}
 
-    //Destructor to clean up memory used by linked list
-    ~ReceiptList() {
+//Destructor to clean up memory used by linked list
+ReceiptList::~ReceiptList() {
         while (head) {
             ReceiptNode *temp = head;
             head = head->next;
             delete temp;
         }
-    }
-};
+}
+
 // Manage a New Sale Order 
 // This function uses a stack to temporarily store an order before confirmation
 void manageCurrentOrder(ReceiptList& receiptList) 
