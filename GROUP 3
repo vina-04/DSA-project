@@ -47,18 +47,18 @@ public:
 	ReceiptList() : head(nullptr), nextReceiptNo(1) {}
 
 	int addReceipt(const vector<Item>& items, const string &date);
-		void displayReceipt(const Receipt* r) const;
-		void viewAllReceipts() const;
-		void sequentialSearch(int targetReceiptNo) const;
-		void binarySearch(int targetReceiptNo) const; 
-		~ReceiptList();
+	void displayReceipt(const Receipt* r) const;
+	void viewAllReceipts() const;
+	void sequentialSearch(int targetReceiptNo) const;
+	void binarySearch(int targetReceiptNo) const; 
+	~ReceiptList();
 };
 
 void createSampleReceipts(ReceiptList& list);
 void manageCurrentOrder(ReceiptList& receiptList);
 
 //Create receipt list
-int Receipt::addReceipt(const vector<Item>& items, const string &date)
+int ReceiptList::addReceipt(const vector<Item>& items, const string &date)
 {
 	Receipt newReceipt;
 	newReceipt.receiptNo = nextReceiptNo++;
