@@ -291,7 +291,59 @@ void manageCurrentOrder(ReceiptList& receiptList)
 		} while (choice != 0);
 }
 
-int viewdailysalesummary(){
+// Daily Sales Summary Function
+void viewDailySalesSummary(const ReceiptList& list, bool sortBySubtotal = false) {
+    struct SummaryItem {
+        string name;
+        double price;
+        int quantity;
+        double subtotal;
+    };
+
+    vector<SummaryItem> summary;
+    double grandTotal = 0;
+
+    ReceiptNode* current = list.getHead();
+    while (current) {
+        for (const Item& item : current->data.items) {
+            auto it = find_if(summary.begin(), summary.end(), [&](const SummaryItem& s) {
+                return s.name == item.name && s.price == item.price;
+            });
+            if (it != summary.end()) {
+                it->quantity += item.quantity;
+                it->subtotal += item.total();
+            } else {
+                summary.push_back({item.name, item.price, item.quantity, item.total()});
+            }
+            grandTotal += item.total();
+        }
+        current = current->next;
+    }
+
+    if (sortBySubtotal) {
+        sort(summary.begin(), summary.end(), [](const SummaryItem& a, const SummaryItem& b) {
+            return a.subtotal > b.subtotal;
+        });
+    } else {
+        sort(summary.begin(), summary.end(), [](const SummaryItem& a, const SummaryItem& b) {
+            return a.name < b.name;
+        });
+    }
+
+    cout << fixed << setprecision(2);
+    cout << "\nThe Twinkle Little Star Bookshop\n";
+    cout << "Daily Sales Summary\n\n";
+    cout << left << setw(5) << "No" << setw(35) << "Item Name"
+         << setw(10) << "Price" << setw(10) << "Quantity" << "Sub Total (RM)" << endl;
+
+    for (size_t i = 0; i < summary.size(); ++i) {
+        cout << left << setw(5) << (i + 1) << setw(35) << summary[i].name
+             << setw(10) << summary[i].price << setw(10) << summary[i].quantity
+             << summary[i].subtotal << endl;
+    }
+
+    cout << right << setw(60) << "TOTAL: " << grandTotal << endl;
+}
 
 }
 
@@ -377,8 +429,15 @@ int main() {
     } while (sub != 0);
             break;
         case 3:
-	    list.viewdailysalesummary();
+	     int sortOption;
+            cout << "\n--- Daily Sales Summary ---\n";
+            cout << "1. Sort by Item Name\n";
+            cout << "2. Sort by Subtotal (RM)\n";
+            cout << "Enter choice: ";
+            cin >> sortOption;
+            viewDailySalesSummary(list, sortOption == 2);
             break;
+        }
         case 0:
             cout << "Exiting...\n";
             break;
