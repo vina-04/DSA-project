@@ -93,7 +93,7 @@ int ReceiptList::addReceipt(const vector<Item>& items, const string &date)
 void ReceiptList::displayReceipt(const Receipt* r) const {
 if (!r) return;
 cout << fixed << setprecision(2); //2 digits after the decimal point
-cout << "Receipt No: " << r->receiptNo << "\nDate: " << r->date << endl;
+cout << "\nReceipt No: " << r->receiptNo << "\nDate: " << r->date << endl;
 cout << "--------------------------------------------\n";
 cout << left << setw(5) << "No" << setw(25) << "Item Name" << setw(10) << "Price" << setw(10) << "Qty" << "Total\n";
 double grandTotal = 0;
@@ -190,6 +190,7 @@ void manageCurrentOrder(ReceiptList& receiptList)
         cout << "0. Cancel Order\n";
         cout << "Enter your choice: ";
         cin >> choice;
+        cin.ignore();
 
         if (choice == 1) {
         	if(orderStack.size() >= 5)
