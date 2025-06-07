@@ -26,11 +26,6 @@ struct Receipt {
     vector<Item> items;
 };
 
-struct ReceiptNode //Linked-list of receipts
-{
-	Receipt data;
-	ReceiptNode *next;
-};
 
 //Class to manage the linked list of receipts
 class ReceiptList {
@@ -45,17 +40,17 @@ private:
 	
 public:
 	ReceiptList() : head(nullptr), nextReceiptNo(1) {}
+	 ~ReceiptList();
 
-	int addReceipt(const vector<Item>& items, const string &date);
-	void displayReceipt(const Receipt* r) const;
-	void viewAllReceipts() const;
-	void sequentialSearch(int targetReceiptNo) const;
-	void binarySearch(int targetReceiptNo) const; 
-	~ReceiptList();
+    int addReceipt(const vector<Item>& items, const string& date);
+    void displayReceipt(const Receipt* r) const;
+    void viewAllReceipts() const;
+    void sequentialSearch(int targetReceiptNo) const;
+    void binarySearch(int targetReceiptNo) const;
+
+    ReceiptNode* getHead() const { return head; } // Needed for daily summary
 };
 
-void createSampleReceipts(ReceiptList& list);
-void manageCurrentOrder(ReceiptList& receiptList);
 
 //Create receipt list
 int ReceiptList::addReceipt(const vector<Item>& items, const string &date)
@@ -303,7 +298,7 @@ void viewDailySalesSummary(const ReceiptList& list, bool sortBySubtotal = false)
     vector<SummaryItem> summary;
     double grandTotal = 0;
 
-    ReceiptNode* current = list.getHead();
+    auto current = list.getHead();
     while (current) {
         for (const Item& item : current->data.items) {
             auto it = find_if(summary.begin(), summary.end(), [&](const SummaryItem& s) {
@@ -345,8 +340,6 @@ void viewDailySalesSummary(const ReceiptList& list, bool sortBySubtotal = false)
     cout << right << setw(60) << "TOTAL: " << grandTotal << endl;
 }
 
-}
-
 //Function to add pre-set receipt data for testing
 void createSampleReceipts(ReceiptList& list) {
     vector<Item> r1 = {
@@ -379,15 +372,16 @@ int main() {
     ReceiptList list;
     createSampleReceipts(list);
 
-    int choice, receiptNo,sub;
+    int choice, receiptNo,sub,sortOption;
     do {
         cout << "\n--- Main Menu ---\n";
         cout << "1. Add New Sale Order\n";
         cout << "2. View Order Detail\n";
         cout << "3. View Daily Sales Summary\n";
         cout << "0. Exit\n";
-        cout << "Choice: ";
+        cout << "Enter choice: ";
         cin >> choice;
+        cin.ignore();
 
         switch (choice) {
         case 1:
@@ -400,8 +394,9 @@ int main() {
         	cout << "2. Search by Receipt No (Sequential)" << endl;
         	cout << "3. Search by Receipt No (Binary)" << endl;
         	cout << "0. Back to main menu" << endl;
-        	cout << "Enter your choice: ";
+        	cout << "Enter choice: ";
         	cin >> sub;
+        	cin.ignore();
 
         	switch (sub) {
             case 1:
@@ -428,16 +423,23 @@ int main() {
         }
     } while (sub != 0);
             break;
-        case 3:
-	     int sortOption;
-            cout << "\n--- Daily Sales Summary ---\n";
+        case 3:{
+	     do{
+            cout << "\n--- Daily Sales Summary ---\n"<<endl;
             cout << "1. Sort by Item Name\n";
             cout << "2. Sort by Subtotal (RM)\n";
+            cout << "0. Back to Main Menu \n";
             cout << "Enter choice: ";
             cin >> sortOption;
+            cin.ignore();
+            
+            if(sortOption == 0){
+            	break;
+			}else{
             viewDailySalesSummary(list, sortOption == 2);
-            break;
-        }
+        }}while (sortOption !=0);
+        break;
+		}
         case 0:
             cout << "Exiting...\n";
             break;
