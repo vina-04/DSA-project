@@ -201,7 +201,6 @@ void manageCurrentOrder(ReceiptList& receiptList)
 			
             Item item;
             cout << "Enter item name: ";
-            cin.ignore();
             getline(cin, item.name);
             cout << "Enter price (RM): ";
             cin >> item.price;
